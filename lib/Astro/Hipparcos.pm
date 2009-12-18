@@ -4,8 +4,9 @@ use 5.008;
 use strict;
 use warnings;
 use Carp 'croak';
+use File::Spec;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use constant LINE_LENGTH => 451; # I wish they were using a modern file format.
 
@@ -16,12 +17,16 @@ sub new {
   my $class = shift;
   my $file = shift;
   croak("Need catalog file") if not defined $file;
-  croak("Specified catalog file '$file' does not exist") if not -e $file;
-  open my $ifh, '<', $file or die "Could not open file '$file' for reading: $!";
+  if (not -e $file) {
+    open my $fh, '>', $file or die "Could not open file '$file' for writing: $!";
+    close $fh;
+  }
+  open my $fh, '+<', $file or die "Could not open file '$file' for reading/writing: $!";
   my $self = bless {
-    fh => $ifh,
+    fh => $fh,
     filename => $file,
     filesize => (-s $file),
+    abs_file => File::Spec->rel2abs($file),
   } => $class;
   return $self;
 }
@@ -48,6 +53,21 @@ sub get_record {
   my $record = Astro::Hipparcos::Record->new();
   $record->ParseRecord($line);
   return $record;
+}
+
+sub append_record {
+  my $self = shift;
+  my $record = shift;
+  croak("Need Astro::Hipparcos::Record as first argument to append_record")
+    unless ref($record) and $record->isa("Astro::Hipparcos::Record");
+
+  my $fh = $self->{fh};
+  my $orig_pos = tell($fh);
+  seek $fh, 0, 2 or die "Could not seek to end of file: $!";
+  print $fh $record->get_line();
+  $self->{filesize} = (-s $self->{abs_file});
+  seek $fh, $orig_pos, 0 or die "Could not seek to previous position: $!";
+  return 1;
 }
 
 1;
@@ -84,7 +104,18 @@ object.
 Returns the next record (line) from the catalog as an L<Astro::Hipparcos::Record>
 object.
 
+=head2 append_record
+
+Appends a record to an existing (or new) catalog. Can be used to select
+subsamples of the full record and write them to new data files.
+Confer the example in this distribution F<examples/simple_selection.pl>.
+
 =head1 SEE ALSO
+
+For an example what you can produce with this little tool,
+have a look at L<http://steffen-mueller.net/hipparcos/hipparcos.eps.bz2>.
+This is implemented in the F<examples/draw_hammer_proj.pl> example in this
+distribution.
 
 L<Astro::Hipparcos::Record>
 

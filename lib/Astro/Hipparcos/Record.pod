@@ -26,12 +26,16 @@ Returns a new record object.
 
 =head2 ParseRecord
 
-Sort of internal method that may SEGFAULT if you use it wrong.
+Somewhat internal method that may SEGFAULT if you use it wrong.
 
 Given a string that MUST contain a full line from the record file,
 fills the object with data from that line.
 
-=head1 ACCESSOR METHODS
+=head2 get_line
+
+Returns the full original catalog line.
+
+=head1 GENERATED ACCESSOR METHODS
 
 Each of these methods descriptions have the following format:
 

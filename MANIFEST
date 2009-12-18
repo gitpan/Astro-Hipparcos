@@ -1,5 +1,9 @@
 buildtools/gen_hip_struct.pl
+buildtools/memory_bench.pl
+buildtools/read_bench.pl
 Changes
+examples/draw_hammer_proj.pl
+examples/simple_selection.pl
 Hipparcos.xs
 lib/Astro/Hipparcos.pm
 lib/Astro/Hipparcos/Record.pod
