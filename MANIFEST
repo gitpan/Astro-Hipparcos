@@ -3,6 +3,7 @@ buildtools/memory_bench.pl
 buildtools/read_bench.pl
 Changes
 examples/draw_hammer_proj.pl
+examples/draw_projection.pl
 examples/simple_selection.pl
 Hipparcos.xs
 lib/Astro/Hipparcos.pm
