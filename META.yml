@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Astro-Hipparcos
-version:            0.08
+version:            0.09
 abstract:           Perl extension for reading the Hipparcos star catalog
 author:
     - Steffen Mueller <smueller@cpan.org>
@@ -11,7 +11,7 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    ExtUtils::XSpp:  0.05
+    ExtUtils::XSpp:  0.06
 no_index:
     directory:
         - t
